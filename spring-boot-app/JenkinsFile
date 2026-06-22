@@ -45,7 +45,7 @@ pipeline {
     }
     stage('Update Deployment File') {
     environment {
-        GIT_REPO_NAME = "jenkins-maven-sonar-pipeline"
+        GIT_REPO_NAME = "jenkins-maven-sonar-argocd"
         GIT_USER_NAME = "ridhindas"
     }
     steps {
