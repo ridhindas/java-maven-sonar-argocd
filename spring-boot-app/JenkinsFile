@@ -1,7 +1,7 @@
 pipeline {
   agent {
     docker {
-      image 'maven-docker-agent:v2'
+      image 'ridhindas/maven-docker-agent:latest'
       args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
     }
   }
