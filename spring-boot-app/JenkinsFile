@@ -12,6 +12,8 @@ pipeline {
       agent {
         docker {
           image 'maven:3.9.6-eclipse-temurin-21'
+          // Added --user root to grant folder creation permissions inside the container
+          args '--user root'
         }
       }
       steps {
@@ -24,6 +26,8 @@ pipeline {
       agent {
         docker {
           image 'maven:3.9.6-eclipse-temurin-21'
+          // Added --user root here as well so SonarQube cache can write properly
+          args '--user root'
         }
       }
       environment {
@@ -37,7 +41,6 @@ pipeline {
     }
     
     stage('Build and Push Docker Image') {
-      // Runs on the host machine which has the Docker daemon and CLI installed
       environment {
         DOCKER_IMAGE = "ridhindas/ultimate-cicd:${BUILD_NUMBER}"
       }
@@ -45,7 +48,6 @@ pipeline {
         script {
           sh 'cd spring-boot-app && docker build -t ${DOCKER_IMAGE} .'
           
-          // Using Jenkins Docker pipeline plugin helper to log in and push
           docker.withRegistry('https://index.docker.io/v1/', "docker-cred") {
             def dockerImage = docker.image("${DOCKER_IMAGE}")
             dockerImage.push()
@@ -55,7 +57,6 @@ pipeline {
     }
     
     stage('Update Deployment File') {
-      // Runs on host machine which has git installed
       environment {
         GIT_REPO_NAME = "java-maven-sonar-argocd"
         GIT_USER_NAME = "ridhindas"
